@@ -15,7 +15,7 @@ ENTRYPOINT ["powershell.exe"]
 
 # exposing the port to match the port in the runserver.py file
 EXPOSE 8000
-CMD ["python", "mt5_investor/main.py"]
+CMD ["python", "mt5_investor/investor.py"]
 
 # build
 # docker build -t mt5_investor .
