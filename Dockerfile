@@ -14,7 +14,6 @@ COPY ["./MetaTrader 5/", "C:/MetaTrader 5/"]
 ENTRYPOINT ["powershell.exe"]
 
 # exposing the port to match the port in the runserver.py file
-EXPOSE 8000
 CMD ["python", "mt5_investor/investor.py"]
 
 # build
