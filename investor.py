@@ -25,7 +25,7 @@ leader_account_id = 1
 account_id = 2
 
 host = 'http://91.228.224.105:8000/'
-terminal_path = '/MetaTrader 5/'
+terminal_path = 'C:/MetaTrader 5/'
 
 
 async def check_connection_exchange():
