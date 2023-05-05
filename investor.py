@@ -363,7 +363,6 @@ async def execute_investor(sleep=settings.sleep_leader_update):
 
 
 if __name__ == '__main__':
-    account_id = db.get_account_id()
     init_data = db.get_init_data(host=host, account_idx=account_id, terminal_path=terminal_path)
     print(init_data)
 

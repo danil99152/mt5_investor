@@ -256,13 +256,6 @@ class DBInterface:
         # print(url, data)
         await patch(url=url, data=json.dumps(data))
 
-    @staticmethod
-    def get_account_id():
-        path = 'account.txt'
-        with open(path, 'r') as file:
-            contents = file.read()
-            return contents
-
     async def disable_position(self, position_ticket):
         url = self.host + f'position/patch/{self.account_id}/{position_ticket}'
         data = {
