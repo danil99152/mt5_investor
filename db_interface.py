@@ -9,6 +9,9 @@ from terminal import Terminal
 
 
 class DBInterface:
+    def __init__(self):
+        pass
+
     init_data: dict
     options: dict
     account_id: int
@@ -158,27 +161,34 @@ class DBInterface:
         url = self.host + 'position-history/post'
         await post(url, data=json.dumps(data))
 
-    @staticmethod
-    def get_init_data(host, account_idx, terminal_path):
-        url = host + f'account/get/{account_idx}'
-        init_data = requests.get(url=url).json()[-1]
-        init_data['path'] = terminal_path
-        return init_data
+    def get_init_data(self, host, account_idx, terminal_path):
+        try:
+            url = host + f'account/get/{account_idx}'
+            response = requests.get(url=url)
+            init_data = response.json()[-1]
+            init_data['path'] = terminal_path
+            return init_data
+        except Exception as e:
+            print(e)
+            return self.get_init_data(host, account_idx, terminal_path)
 
-    @staticmethod
-    def get_leader_id(host, account_idx):
-        url = host + f'leader_id_by_investor/get/{account_idx}'
-        result = requests.get(url=url)
-        # print(result.text)
-        if result:
+    def get_leader_id(self, host, account_idx):
+        try:
+            url = host + f'leader_id_by_investor/get/{account_idx}'
+            result = requests.get(url=url)
             return int(result.text)
-        else:
-            return -1
+        except Exception as e:
+            print(e)
+            self.get_leader_id(host, account_idx)
 
     async def get_investor_options(self):
-        url = self.host + f'option/list/'
-        return await get(url=url)
-        # return requests.get(url=url).json()[-1]
+        try:
+            url = self.host + f'option/list/'
+            return await get(url=url)
+            # return requests.get(url=url).json()[-1]
+        except Exception as e:
+            print(e)
+            return self.get_investor_options()
 
     async def disable_dcs(self):
         url = self.host + f'account/patch/{self.account_id}/'
@@ -186,21 +196,26 @@ class DBInterface:
         await patch(url=url, data=json.dumps(data))
 
     async def get_db_positions(self, id_):
-        url = self.host + f'position/list/active/{id_}'
-        result = await get(url=url)
-        # print(id_, url, result)
-        return result
+        try:
+            url = self.host + f'position/list/active/{id_}'
+            result = await get(url=url)
+            # print(id_, url, result)
+            return result
+        except Exception as e:
+            print(e)
+            return self.get_db_positions(id_)
 
     async def get_account_data(self):
-        url = self.host + f'account/get/{self.leader_id}'
-        response = await get(url=url)
-        if response:
+        try:
+            url = self.host + f'account/get/{self.leader_id}'
+            response = await get(url=url)
             self.leader_balance = response[0]['balance']
             self.leader_equity = response[0]['equity']
             self.leader_currency = response[0]['currency']
             self.investment_size = response[0]['investment_size']
-        else:
-            print('\tEMPTY LEADER DATA')
+        except Exception as e:
+            print(e)
+            await self.get_account_data()
 
     async def send_position(self, position, investment_size):
         url = self.host + 'position/post'
@@ -240,6 +255,13 @@ class DBInterface:
         }
         # print(url, data)
         await patch(url=url, data=json.dumps(data))
+
+    @staticmethod
+    def get_account_id():
+        path = 'account.txt'
+        with open(path, 'r') as file:
+            contents = file.read()
+            return contents
 
     async def disable_position(self, position_ticket):
         url = self.host + f'position/patch/{self.account_id}/{position_ticket}'
