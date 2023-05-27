@@ -1,22 +1,16 @@
-# first layer is our python base image enabling us to run pip
-FROM python:3.10-windowsservercore-ltsc2022
+FROM tobix/pywine:3.10
 
-# create directory in the container for adding your files
-WORKDIR /user/src/app
+ADD ./mt5_investor ./mt5_investor
+ADD ./MetaTrader5 ./MetaTrader5
 
-# copy over the requirements file and run pip install to install the packages into your container at the directory defined above
-COPY ./mt5_investor/requirements.txt ./
-RUN python.exe -m pip install --upgrade pip
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
-COPY ./mt5_investor/ ./mt5_investor/
-COPY ["./MetaTrader 5/", "C:/MetaTrader 5/"]
-# enter entry point parameters executing the container
-ENTRYPOINT ["powershell.exe"]
+RUN cd / && apt update && apt install -y xvfb && \
+    wine python -m pip install --upgrade pip setuptools && \
+    wine python -m pip install -r ./mt5_investor/requirements.txt
 
-# exposing the port to match the port in the runserver.py file
-CMD ["python", "mt5_investor/investor.py"]
+CMD xvfb-run wine python -u ./mt5_investor/investor.py
 
 # build
-# docker build -t mt5_investor .
+# docker build -t mt5-investor .
+#
 # run
-# docker run -p 8000:8000 <image_id>
+# docker run --name mt5-investor <image_id> --env ACCOUNT_ID=<account_pk>
