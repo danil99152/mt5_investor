@@ -13,4 +13,5 @@ CMD xvfb-run wine python -u ./mt5_investor/investor.py
 # docker build -t mt5-investor .
 #
 # run
-# docker run --name mt5-investor <image_id> --env EXCHANGE_ID=<exchange_pk>
+# docker run -e EXCHANGE_ID=<exchange_pk> --name mt5-investor <image_id>
+
