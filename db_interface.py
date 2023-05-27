@@ -14,7 +14,7 @@ class DBInterface:
 
     init_data: dict
     options: dict
-    account_id: int
+    exchange_id: int
     host: str
     leader_id: int
     leader_balance: float
@@ -22,13 +22,13 @@ class DBInterface:
     investment_size: float
     leader_currency: str
 
-    __slots__ = ['init_data', 'options', 'account_id', 'host', 'leader_id', 'leader_balance',
+    __slots__ = ['init_data', 'options', 'exchange_id', 'host', 'leader_id', 'leader_balance',
                  'leader_equity', 'leader_currency', 'investment_size']
 
-    def initialize(self, init_data, account_id, leader_id, host, leader_currency):
+    def initialize(self, init_data, exchange_id, leader_id, host, leader_currency):
         self.init_data = init_data
         self.leader_id = leader_id
-        self.account_id = account_id
+        self.exchange_id = exchange_id
         self.host = host
         self.leader_currency = leader_currency
 
@@ -39,12 +39,12 @@ class DBInterface:
         await self.get_account_data()
 
     def send_currency(self):
-        url = self.host + f'account/patch/{self.account_id}'
+        url = self.host + f'exchange/patch/{self.exchange_id}'
         data = {"currency": Terminal.get_account_currency()}
         requests.patch(url=url, data=json.dumps(data))
 
     async def send_history_position(self, position_ticket, max_balance):
-        url = self.host + f'position/get/{self.account_id}/{position_ticket}'
+        url = self.host + f'position/get/{self.exchange_id}/{position_ticket}'
         response = await get(url)
         investment = response[0]['investment_size']
         slippage_percent = self.options['deal_in_plus'] if self.options['deal_in_plus'] \
@@ -113,7 +113,7 @@ class DBInterface:
             'user_id': '',  #
             'api_key': self.init_data['login'],  # API Key
             'secret_key': self.init_data['password'],  # Secret Key
-            'account': self.account_id,  # Account
+            'account': self.exchange_id,  # Account
             'strategy': '',  #
             'investment': 0,  #
             'multiplicator': self.options['multiplier_value'],  # Multiplicator
@@ -161,25 +161,25 @@ class DBInterface:
         url = self.host + 'position-history/post'
         await post(url, data=json.dumps(data))
 
-    def get_init_data(self, host, account_idx, terminal_path):
+    def get_init_data(self, host, exchange_idx, terminal_path):
         try:
-            url = host + f'exchange/get/{account_idx}'
+            url = host + f'exchange/get/{exchange_idx}'
             response = requests.get(url=url)
             init_data = response.json()[-1]
             init_data['path'] = terminal_path
             return init_data
         except Exception as e:
             print(e)
-            return self.get_init_data(host, account_idx, terminal_path)
+            return self.get_init_data(host, exchange_idx, terminal_path)
 
-    def get_leader_id(self, host, account_idx):
+    def get_leader_id(self, host, exchange_idx):
         try:
-            url = host + f'leader_id_by_investor/get/{account_idx}'
+            url = host + f'leader_id_by_exchange/get/{exchange_idx}'
             result = requests.get(url=url)
             return int(result.text)
         except Exception as e:
             print(e)
-            self.get_leader_id(host, account_idx)
+            self.get_leader_id(host, exchange_idx)
 
     async def get_investor_options(self):
         try:
@@ -191,7 +191,7 @@ class DBInterface:
             return self.get_investor_options()
 
     async def disable_dcs(self):
-        url = self.host + f'account/patch/{self.account_id}/'
+        url = self.host + f'exchange/patch/{self.exchange_id}/'
         data = {'access': False}
         await patch(url=url, data=json.dumps(data))
 
@@ -207,7 +207,7 @@ class DBInterface:
 
     async def get_account_data(self):
         try:
-            url = self.host + f'account/get/{self.leader_id}'
+            url = self.host + f'exchange/get/{self.exchange_id}'
             response = await get(url=url)
             self.leader_balance = response[0]['balance']
             self.leader_equity = response[0]['equity']
@@ -220,7 +220,7 @@ class DBInterface:
     async def send_position(self, position, investment_size):
         url = self.host + 'position/post'
         data = {
-            "account_pk": self.account_id,
+            "exchange_pk": self.exchange_id,
             "ticket": position.ticket,
             "time": position.time,
             "time_update": position.time_update,
@@ -243,7 +243,7 @@ class DBInterface:
         await post(url=url, data=json.dumps(data))
 
     async def update_position(self, position):
-        url = self.host + f'position/patch/{self.account_id}/{position.ticket}'
+        url = self.host + f'position/patch/{self.exchange_id}/{position.ticket}'
         data = {
             "time_update": position.time_update,
             "volume": position.volume,
@@ -257,7 +257,7 @@ class DBInterface:
         await patch(url=url, data=json.dumps(data))
 
     async def disable_position(self, position_ticket):
-        url = self.host + f'position/patch/{self.account_id}/{position_ticket}'
+        url = self.host + f'position/patch/{self.exchange_id}/{position_ticket}'
         data = {
             # "price_close": 0,
             # "time_close": 0,

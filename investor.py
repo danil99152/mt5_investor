@@ -21,7 +21,7 @@ db = DBInterface()
 start_date = datetime.now().replace(microsecond=0)
 
 leader_account_id = -1
-account_id = int(os.getenv("EXCHANGE_ID"))
+exchange_id = int(os.getenv("EXCHANGE_ID"))
 
 host = settings.host
 terminal_path = os.path.abspath('MetaTrader5/terminal64.exe')
@@ -344,7 +344,7 @@ async def execute_investor(sleep=settings.sleep_leader_update):
             for _ in closed_positions:
                 await db.send_history_position(_.ticket, max_balance)
 
-        active_db_positions = await db.get_db_positions(account_id)
+        active_db_positions = await db.get_db_positions(exchange_id)
         active_db_tickets = [position['ticket'] for position in active_db_positions]
         terminal_positions = Terminal.get_positions()
         terminal_tickets = [position.ticket for position in terminal_positions]
@@ -363,7 +363,7 @@ async def execute_investor(sleep=settings.sleep_leader_update):
 
 
 if __name__ == '__main__':
-    init_data = db.get_init_data(host=host, account_idx=account_id, terminal_path=terminal_path)
+    init_data = db.get_init_data(host=host, exchange_idx=exchange_id, terminal_path=terminal_path)
     print(init_data)
 
     if not Terminal.is_init_data_valid(init_data):
@@ -376,8 +376,8 @@ if __name__ == '__main__':
     if not terminal.init_mt():
         print('Ошибка инициализации лидера', init_data)
         exit()
-    leader_account_id = db.get_leader_id(host, account_id)
-    db.initialize(init_data=init_data, leader_id=leader_account_id, account_id=account_id, host=host,
+    leader_account_id = db.get_leader_id(host, exchange_id)
+    db.initialize(init_data=init_data, leader_id=leader_account_id, exchange_id=exchange_id, host=host,
                   leader_currency=Terminal.get_account_currency())
 
     db.send_currency()
