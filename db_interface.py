@@ -163,7 +163,7 @@ class DBInterface:
 
     def get_init_data(self, host, account_idx, terminal_path):
         try:
-            url = host + f'account/get/{account_idx}'
+            url = host + f'exchange/get/{account_idx}'
             response = requests.get(url=url)
             init_data = response.json()[-1]
             init_data['path'] = terminal_path

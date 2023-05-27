@@ -21,7 +21,7 @@ db = DBInterface()
 start_date = datetime.now().replace(microsecond=0)
 
 leader_account_id = -1
-account_id = int(os.getenv("ACCOUNT_ID"))
+account_id = int(os.getenv("EXCHANGE_ID"))
 
 host = settings.host
 terminal_path = os.path.abspath('MetaTrader5/terminal64.exe')
