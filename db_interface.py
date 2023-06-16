@@ -172,14 +172,14 @@ class DBInterface:
             print(e)
             return self.get_init_data(host, exchange_idx, terminal_path)
 
-    def get_leader_id(self, host, exchange_idx):
+    def get_leader_ids(self, host, exchange_idx):
         try:
-            url = host + f'leader_id_by_exchange/get/{exchange_idx}'
+            url = host + f'leader-id-by-exchange/get/{exchange_idx}'
             result = requests.get(url=url)
-            return int(result.text)
+            return list(result.text)
         except Exception as e:
             print(e)
-            self.get_leader_id(host, exchange_idx)
+            self.get_leader_ids(host, exchange_idx)
 
     async def get_investor_options(self):
         try:

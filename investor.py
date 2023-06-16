@@ -376,21 +376,22 @@ if __name__ == '__main__':
     if not terminal.init_mt():
         print('Ошибка инициализации лидера', init_data)
         exit()
-    leader_account_id = db.get_leader_id(host, exchange_id)
-    db.initialize(init_data=init_data, leader_id=leader_account_id, exchange_id=exchange_id, host=host,
-                  leader_currency=Terminal.get_account_currency())
+    leader_account_ids = db.get_leader_ids(host, exchange_id)
+    for leader_account_id in leader_account_ids:
+        db.initialize(init_data=init_data, leader_id=leader_account_id, exchange_id=exchange_id, host=host,
+                      leader_currency=Terminal.get_account_currency())
 
-    db.send_currency()
+        db.send_currency()
 
-    event_loop = asyncio.new_event_loop()
-    event_loop.create_task(execute_investor())
-    event_loop.run_forever()
-    # terminal = Terminal(login=66587203, password='3hksvtko', server='MetaQuotes-Demo',
-    #                     path=r'C:\Program Files\MetaTrader 5\terminal64.exe')
-    # if not terminal.init_mt():
-    #     await send_comment('Ошибка инициализации лидера')
-    #     exit()
-    #
-    # event_loop = asyncio.new_event_loop()
-    # event_loop.create_task(execute_investor())
-    # event_loop.run_forever()
+        event_loop = asyncio.new_event_loop()
+        event_loop.create_task(execute_investor())
+        event_loop.run_forever()
+        # terminal = Terminal(login=66587203, password='3hksvtko', server='MetaQuotes-Demo',
+        #                     path=r'C:\Program Files\MetaTrader 5\terminal64.exe')
+        # if not terminal.init_mt():
+        #     await send_comment('Ошибка инициализации лидера')
+        #     exit()
+        #
+        # event_loop = asyncio.new_event_loop()
+        # event_loop.create_task(execute_investor())
+        # event_loop.run_forever()
