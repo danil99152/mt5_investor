@@ -1,3 +1,4 @@
+import os
 
 TIMEOUT_INIT = 60_000  # время ожидания при инициализации терминала (рекомендуемое 60_000 millisecond)
 MAGIC = 876543210  # идентификатор эксперта
@@ -9,7 +10,10 @@ old_investors_balance = {}
 EURUSD = USDRUB = EURRUB = -1
 sleep_leader_update = 1  # пауза для обновления лидера
 
-host = 'http://91.228.224.105:8000/'
+terminal_path = os.path.abspath('MetaTrader5/terminal64.exe')
+host = 'http://localhost:8000/'
+exchange_id = int(os.getenv("EXCHANGE_ID"))
+
 
 source = {
     # 'lieder': {},

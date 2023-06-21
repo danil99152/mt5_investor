@@ -1,5 +1,5 @@
 import asyncio
-import os
+import threading
 from datetime import datetime
 from math import fabs
 
@@ -21,10 +21,10 @@ db = DBInterface()
 start_date = datetime.now().replace(microsecond=0)
 
 leader_account_id = -1
-exchange_id = int(os.getenv("EXCHANGE_ID"))
+exchange_id = settings.exchange_id
 
 host = settings.host
-terminal_path = os.path.abspath('MetaTrader5/terminal64.exe')
+terminal_path = settings.terminal_path
 
 
 async def check_connection_exchange():
@@ -372,7 +372,8 @@ if __name__ == '__main__':
                         password=init_data['password'],
                         server=init_data['server'],
                         path=init_data['path'],
-                        start_date=datetime.now())
+                        start_date=datetime.now(),
+                        portable=True)
     if not terminal.init_mt():
         print('Ошибка инициализации лидера', init_data)
         exit()
@@ -385,7 +386,7 @@ if __name__ == '__main__':
 
         event_loop = asyncio.new_event_loop()
         event_loop.create_task(execute_investor())
-        event_loop.run_forever()
+        threading.Thread(event_loop.run_forever()).run()
         # terminal = Terminal(login=66587203, password='3hksvtko', server='MetaQuotes-Demo',
         #                     path=r'C:\Program Files\MetaTrader 5\terminal64.exe')
         # if not terminal.init_mt():

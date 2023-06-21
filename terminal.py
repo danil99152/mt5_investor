@@ -92,19 +92,20 @@ class Terminal:
     DEVIATION = settings.DEVIATION
     MAGIC = settings.MAGIC
 
-    __slots__ = ['login', 'password', 'server', 'path', 'account_balance', 'account_equity', 'start_date']
+    __slots__ = ['login', 'password', 'server', 'path', 'account_balance', 'account_equity', 'start_date', 'portable']
 
-    def __init__(self, login, password, server, path, start_date):
+    def __init__(self, login, password, server, path, start_date, portable):
         self.login = login
         self.password = password
         self.server = server
         self.path = path
         self.start_date = start_date
+        self.portable = portable
 
     def init_mt(self):
         """Initialize connection"""
         return Mt.initialize(login=self.login, server=self.server, password=self.password, path=self.path,
-                             timeout=self.TIMEOUT)
+                             timeout=self.TIMEOUT, portable=self.portable)
 
     @staticmethod
     def get_account_balance():
