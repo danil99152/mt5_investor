@@ -379,7 +379,7 @@ if __name__ == '__main__':
                         start_date=datetime.now(),
                         portable=True)
     if not terminal.init_mt():
-        print('Ошибка инициализации лидера', init_data)
+        print('Ошибка инициализации инвестора', init_data)
         exit()
     leader_account_ids = db.get_leader_ids(host, exchange_id)
     for leader_account_id in leader_account_ids:
