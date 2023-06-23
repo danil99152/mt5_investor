@@ -1,6 +1,5 @@
 """Functions collection for HTTP requests"""
 import aiohttp
-import settings
 
 
 async def get(url):
@@ -40,20 +39,20 @@ async def post(url, data):
     return response
 
 
-async def get_current_db_record_id():
-    url = settings.host + 'last'
-    rsp = await get(url)
-    if not len(rsp):
-        return None
-    response = rsp[0]
-    return response['id']
+# async def get_current_db_record_id():
+#     url = settings.host + 'last'
+#     rsp = await get(url)
+#     if not len(rsp):
+#         return None
+#     response = rsp[0]
+#     return response['id']
 
 
-async def send_comment(comment):
-    if not comment or comment == 'None':
-        return
-    idx = await get_current_db_record_id()
-    if not idx:
-        return
-    url = settings.host + f'patch/{idx}/'
-    await patch(url=url, data={"comment": comment})
+# async def send_comment(comment):
+#     if not comment or comment == 'None':
+#         return
+#     idx = await get_current_db_record_id()
+#     if not idx:
+#         return
+#     url = settings.host + f'patch/{idx}/'
+#     await patch(url=url, data={"comment": comment})

@@ -3,11 +3,9 @@ import threading
 from datetime import datetime
 from math import fabs
 
-import deal_comment
 from db_interface import DBInterface
 from deal_comment import DealComment
 import settings
-from http_commands import send_comment
 from linked_positions import LinkedPositions
 from terminal import Terminal
 
@@ -30,29 +28,29 @@ terminal_path = settings.terminal_path
 async def check_connection_exchange():
     close_reason = None
     try:
-        if db.options['api_key_expired'] == "Да":
+        if db.options['api_key_expired']:
             close_reason = '04'
             # force_close_all_positions(investor=investor, reason=close_reason)
-        elif db.options['no_exchange_connection'] == 'Да':
+        elif db.options['no_exchange_connection']:
             close_reason = '05'
             # force_close_all_positions(investor=investor, reason=close_reason)
-        if close_reason:
-            await send_comment(comment=deal_comment.reasons_code[close_reason])
+        # if close_reason:
+        #     await send_comment(comment=deal_comment.reasons_code[close_reason])
     except Exception as e:
         print("Exception in patching_connection_exchange:", e)
     return True if close_reason else False
 
 
 async def check_notification():
-    if db.options['notification'] == 'Да':
-        await send_comment('Вы должны оплатить вознаграждение')
+    if db.options['notification']:
+        # await send_comment('Вы должны оплатить вознаграждение')
         return True
     return False
 
 
 async def execute_conditions():
-    if db.options['disconnect'] == 'Да':
-        await send_comment('Инициатор отключения: ' + db.options['shutdown_initiator'])
+    if db.options['disconnect']:
+        # await send_comment('Инициатор отключения: ' + db.options['shutdown_initiator'])
 
         if Terminal.get_investors_positions_count(only_own=True) == 0:  # если нет открытых сделок
             await db.disable_dcs()
@@ -63,7 +61,7 @@ async def execute_conditions():
                 await db.send_history_position(_.ticket, max_balance)
             await db.disable_dcs()
 
-        elif db.options['accompany_transactions'] == 'Нет':  # если сделки оставить и не сопровождать
+        elif db.options['accompany_transactions']:  # если сделки оставить и не сопровождать
             await db.disable_dcs()
 
 
@@ -72,7 +70,7 @@ async def check_stop_limits():
     start_balance = float(db.options['investment'])
     if start_balance <= 0:
         start_balance = 1
-    limit_size = db.options['stop_value']
+    limit_size = float(db.options['stop_value'])
     calc_limit_in_percent = True if db.options['stop_loss'] == 'Процент' else False
     history_profit = terminal.get_history_profit()
     current_profit = Terminal.get_positions_profit()
@@ -98,8 +96,8 @@ async def check_stop_limits():
         active_positions = Terminal.get_positions()
         if close_positions and len(active_positions) > 0:
             print('     Закрытие всех позиций по условию стоп-лосс')
-            await send_comment('Закрытие всех позиций по условию стоп-лосс. Убыток торговли c' + str(
-                start_date.replace(microsecond=0)) + ':' + str(round(total_profit, 2)))
+            # await send_comment('Закрытие всех позиций по условию стоп-лосс. Убыток торговли c' + str(
+            #     start_date.replace(microsecond=0)) + ':' + str(round(total_profit, 2)))
             for act_pos in active_positions:
                 if act_pos.magic == terminal.MAGIC:
                     Terminal.close_position(position=act_pos, reason='07')
@@ -173,7 +171,7 @@ def synchronize_positions_limits(lieder_positions):
 
 def check_transaction(leader_position):
     """Проверка открытия позиции"""
-    price_refund = True if db.options['price_refund'] == 'Да' else False
+    price_refund = bool(db.options['price_refund'])
     if not price_refund:  # если не возврат цены
         timeout = db.options['waiting_time']  # * 60
 
@@ -195,10 +193,10 @@ def check_transaction(leader_position):
     if deal_profit > 0 > transaction_type:  # если открывать только - и профит > 0
         return False
 
-    transaction_plus = db.options['deal_in_plus']
-    transaction_minus = db.options['deal_in_minus']
-    price_open = leader_position['price_open']
-    price_current = leader_position['price_current']
+    transaction_plus = float(db.options['deal_in_plus'])
+    transaction_minus = float(db.options['deal_in_minus'])
+    price_open = float(leader_position['price_open'])
+    price_current = float(leader_position['price_current'])
 
     res = None
     if leader_position['type'] == 0:  # Buy
@@ -225,7 +223,7 @@ def multiply_deal_volume(leader_position):
         decimals = Terminal.get_volume_decimals(symbol)
     except AttributeError:
         decimals = 2
-    if db.options['changing_multiplier'] == 'Нет':
+    if not db.options['changing_multiplier']:
         result = round(lieder_volume * ext_k, decimals)
     else:
         result = round(lieder_volume * multiplier * ext_k, decimals)
@@ -273,24 +271,24 @@ def get_currency_coefficient():
     return currency_coefficient
 
 
-async def execute_investor(sleep=settings.sleep_leader_update):
+async def execute_investor(leader_id, sleep=settings.sleep_leader_update):
     global leader_positions, db, max_balance
     while True:
-        await db.update_data()
-        leader_positions = await db.get_db_positions(leader_account_id)
+        await db.update_data(leader_id)
+        leader_positions = await db.get_db_positions(leader_id)
         balance = Terminal.get_account_balance()
         if balance > max_balance:
             max_balance = balance
 
-        if db.options['blacklist'] == 'Да':
+        if db.options['blacklist']:
             print(init_data['login'], 'in blacklist')
             return
         if await check_notification():
             print(init_data['login'], 'not pay - notify')
             return
-        if await check_connection_exchange():
-            print(init_data['login'], 'API expired or Broker disconnected')
-            return
+        # if await check_connection_exchange():
+        #     print(init_data['login'], 'API expired or Broker disconnected')
+        #     return
 
         if dcs_access:
             await execute_conditions()  # проверка условий кейса закрытия
@@ -299,7 +297,7 @@ async def execute_investor(sleep=settings.sleep_leader_update):
 
         if dcs_access:
 
-            synchronize_positions_volume()  # коррекция объемов позиций
+            # synchronize_positions_volume()  # коррекция объемов позиций
             synchronize_positions_limits(leader_positions)  # коррекция лимитов позиций
 
             for pos_lid in leader_positions:
@@ -331,15 +329,15 @@ async def execute_investor(sleep=settings.sleep_leader_update):
                             ret_code = response['retcode']
                 if ret_code:
                     msg = str(init_data['login']) + ' ' + Terminal.send_retcodes[ret_code][1]  # + ' : ' + str(ret_code)
-                    if ret_code != 10009:  # Заявка выполнена
-                        await send_comment('\t' + msg)
+                    # if ret_code != 10009:  # Заявка выполнена
+                    #     await send_comment('\t' + msg)
                     print(msg)
             # else:
             #     set_comment('Не выполнено условие +/-')
 
         # закрытие позиций от лидера
         if (dcs_access or  # если сопровождать сделки или доступ есть
-                (not dcs_access and db.options['accompany_transactions'] == 'Да')):
+                (not dcs_access and db.options['accompany_transactions'])):
             closed_positions = Terminal.close_positions_by_lieder(leader_positions=leader_positions)
             for _ in closed_positions:
                 await db.send_history_position(_.ticket, max_balance)
@@ -360,6 +358,12 @@ async def execute_investor(sleep=settings.sleep_leader_update):
                 await db.disable_position(position['ticket'])
 
         await asyncio.sleep(sleep)
+
+
+def callback(leader_id):
+    event_loop = asyncio.new_event_loop()
+    event_loop.create_task(execute_investor(leader_id=leader_id))
+    event_loop.run_forever()
 
 
 if __name__ == '__main__':
@@ -383,16 +387,4 @@ if __name__ == '__main__':
                       leader_currency=Terminal.get_account_currency())
 
         db.send_currency()
-
-        event_loop = asyncio.new_event_loop()
-        event_loop.create_task(execute_investor())
-        threading.Thread(event_loop.run_forever()).run()
-        # terminal = Terminal(login=66587203, password='3hksvtko', server='MetaQuotes-Demo',
-        #                     path=r'C:\Program Files\MetaTrader 5\terminal64.exe')
-        # if not terminal.init_mt():
-        #     await send_comment('Ошибка инициализации лидера')
-        #     exit()
-        #
-        # event_loop = asyncio.new_event_loop()
-        # event_loop.create_task(execute_investor())
-        # event_loop.run_forever()
+        threading.Thread(target=callback, args=(leader_account_id,)).start()

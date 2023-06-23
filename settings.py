@@ -11,7 +11,7 @@ EURUSD = USDRUB = EURRUB = -1
 sleep_leader_update = 1  # пауза для обновления лидера
 
 terminal_path = os.path.abspath('MetaTrader5/terminal64.exe')
-host = 'http://localhost:8000/'
+host = 'http://37.230.114.244:8000/'
 exchange_id = int(os.getenv("EXCHANGE_ID"))
 
 

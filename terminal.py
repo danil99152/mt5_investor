@@ -6,7 +6,6 @@ import MetaTrader5 as Mt
 
 from deal_comment import DealComment
 import settings
-from http_commands import send_comment
 
 
 class Terminal:
@@ -412,7 +411,7 @@ class Terminal:
             max_vol = info.volume_max
             if request['volume'] > max_vol:
                 print(options['login'], f'Объем сделки [{request["volume"]}] больше максимального [{max_vol}]. ')
-                await send_comment('Объем сделки больше максимального')
+                # await send_comment('Объем сделки больше максимального')
                 return 'MORE_THAN_MAX_VOLUME'
             if options['not_enough_margin'] == 'Минимальный объем':
                 request['volume'] = Mt.symbol_info(request['symbol']).volume_min

@@ -32,8 +32,8 @@ class DBInterface:
         self.host = host
         self.leader_currency = leader_currency
 
-    async def update_data(self):
-        opt = await self.get_investor_options()
+    async def update_data(self, leader_id):
+        opt = await self.get_investor_options(leader_id)
         if opt:
             self.options = opt[-1]
         await self.get_account_data()
@@ -46,7 +46,10 @@ class DBInterface:
     async def send_history_position(self, position_ticket, max_balance):
         url = self.host + f'position/get/{self.exchange_id}/{position_ticket}'
         response = await get(url)
-        investment = response[0]['investment_size']
+        if response:
+            investment = response[0]['investment_size']
+        else:
+            investment = 0
         slippage_percent = self.options['deal_in_plus'] if self.options['deal_in_plus'] \
             else self.options['deal_in_minus']
         drawdown = (max_balance - (Terminal.get_account_balance() - investment)) / max_balance
@@ -132,8 +135,8 @@ class DBInterface:
             'volume_percent': volume_percent,  # Volume %
             'open_time': date_open,  # Open Time
             'open_price': price_open,  # Open Price
-            'stop_loss': response[0]['sl'],  # history_orders[-1].sl,  # Stop loss
-            'take_profit': response[0]['tp'],  # history_orders[-1].tp,  # Take profit
+            'stop_loss': response[0]['sl'] if response else 0,  # history_orders[-1].sl,  # Stop loss
+            'take_profit': response[0]['tp'] if response else 0,  # history_orders[-1].tp,  # Take profit
             'close_time': date_close,  # Close time
             'close_price': price_close,  # Close Price
             'change_percent': change_percent,  # Change_%
@@ -176,14 +179,14 @@ class DBInterface:
         try:
             url = host + f'leader-id-by-exchange/get/{exchange_idx}'
             result = requests.get(url=url)
-            return list(result.text)
+            return list(result.json())
         except Exception as e:
             print(e)
             self.get_leader_ids(host, exchange_idx)
 
-    async def get_investor_options(self):
+    async def get_investor_options(self, leader_id):
         try:
-            url = self.host + f'option/list/'
+            url = self.host + f'option/get/{leader_id}'
             return await get(url=url)
             # return requests.get(url=url).json()[-1]
         except Exception as e:
