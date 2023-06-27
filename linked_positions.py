@@ -75,7 +75,7 @@ class LinkedPositions:
         new_comment_str = new_comment.string()
         if new_volume > self.volume:  # Увеличение объема
             vol = round(new_volume - self.volume, decimals)
-            print('\t Увеличение объема на', vol)
+            print('\t Увеличение объема на'.encode('utf-8'), vol)
             request = {
                 "action": Terminal.trade_action_deal(),
                 "symbol": self.symbol,
@@ -117,8 +117,9 @@ class LinkedPositions:
                     target_volume = round(target_volume - pos.volume,
                                           decimals)  # Уменьшить целевой объем на объем закрытой позиции
                 elif pos.volume > target_volume:  # Если объем позиции больше целевого, то закрыть часть позиции
-                    print('\t Уменьшение объема. Частичное закрытие позиции', pos.ticket, 'объем:', pos.volume,
-                          'на', target_volume)
+                    print('\t Уменьшение объема. Частичное закрытие позиции'.encode('utf-8'), pos.ticket,
+                          'объем:'.encode('utf-8'), pos.volume,
+                          'на'.encode('utf-8'), target_volume)
                     request = {
                         "action": Terminal.trade_action_deal(),
                         "symbol": pos.symbol,

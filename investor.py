@@ -96,7 +96,7 @@ async def check_stop_limits():
         # CLOSE ALL POSITIONS
         active_positions = Terminal.get_positions()
         if close_positions and len(active_positions) > 0:
-            print('     Закрытие всех позиций по условию стоп-лосс')
+            print('     Закрытие всех позиций по условию стоп-лосс'.encode('utf-8'))
             # await send_comment('Закрытие всех позиций по условию стоп-лосс. Убыток торговли c' + str(
             #     start_date.replace(microsecond=0)) + ':' + str(round(total_profit, 2)))
             for act_pos in active_positions:
@@ -167,7 +167,7 @@ def synchronize_positions_limits(lieder_positions):
 
                 if request:
                     result = Terminal.send_order(request)
-                    print('\tЛимит изменен:', result)
+                    print('\tЛимит изменен:'.encode('utf-8'), result)
 
 
 def check_transaction(leader_position):
