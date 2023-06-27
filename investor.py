@@ -1,3 +1,5 @@
+# TODO: rewrite all cyrillic text to latin in print or send it via http because of encoding problem
+
 import asyncio
 import threading
 from datetime import datetime
@@ -329,7 +331,8 @@ async def execute_investor(leader_id, sleep=settings.sleep_leader_update):
                         except AttributeError:
                             ret_code = response['retcode']
                 if ret_code:
-                    msg = str(init_data['login']) + ' ' + Terminal.send_retcodes[ret_code][1]  # + ' : ' + str(ret_code)
+                    msg = (str(init_data['login']) + ' ' + str(Terminal.send_retcodes[ret_code][1].decode('utf-8'))) \
+                        .encode('utf-8')  # + ' : ' + str(ret_code)
                     # if ret_code != 10009:  # Заявка выполнена
                     #     await send_comment('\t' + msg)
                     print(msg)
