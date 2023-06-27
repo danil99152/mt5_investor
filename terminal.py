@@ -10,73 +10,73 @@ import settings
 
 class Terminal:
     send_retcodes = {
-        -800: ('CUSTOM_RETCODE_NOT_ENOUGH_MARGIN', 'Уменьшите множитель или увеличьте сумму инвестиции'),
-        -700: ('CUSTOM_RETCODE_LIMITS_NOT_CHANGED', 'Уровни не изменены'),
-        -600: ('CUSTOM_RETCODE_POSITION_NOT_MODIFIED', 'Объем сделки не изменен'),
-        -500: ('CUSTOM_RETCODE_POSITION_NOT_MODIFIED', 'Объем сделки не изменен'),
-        -400: ('CUSTOM_RETCODE_POSITION_NOT_MODIFIED', 'Объем сделки не изменен'),
-        -300: ('CUSTOM_RETCODE_EQUAL_VOLUME', 'Новый объем сделки равен существующему'),
-        -200: ('CUSTOM_RETCODE_WRONG_SYMBOL', 'Нет такого торгового символа'),
-        -100: ('CUSTOM_RETCODE_NOT_ENOUGH_MARGIN', 'Нехватка маржи. Выбран режим - Не открывать сделку или Не выбрано'),
-        10004: ('TRADE_RETCODE_REQUOTE', 'Реквота'),
-        10006: ('TRADE_RETCODE_REJECT', 'Запрос отклонен'),
-        10007: ('TRADE_RETCODE_CANCEL', 'Запрос отменен трейдером'),
-        10008: ('TRADE_RETCODE_PLACED', 'Ордер размещен'),
-        10009: ('TRADE_RETCODE_DONE', 'Заявка выполнена'),
-        10010: ('TRADE_RETCODE_DONE_PARTIAL', 'Заявка выполнена частично'),
-        10011: ('TRADE_RETCODE_ERROR', 'Ошибка обработки запроса'),
-        10012: ('TRADE_RETCODE_TIMEOUT', 'Запрос отменен по истечению времени'),
-        10013: ('TRADE_RETCODE_INVALID', 'Неправильный запрос'),
-        10014: ('TRADE_RETCODE_INVALID_VOLUME', 'Неправильный объем в запросе'),
-        10015: ('TRADE_RETCODE_INVALID_PRICE', 'Неправильная цена в запросе'),
-        10016: ('TRADE_RETCODE_INVALID_STOPS', 'Неправильные стопы в запросе'),
-        10017: ('TRADE_RETCODE_TRADE_DISABLED', 'Торговля запрещена'),
-        10018: ('TRADE_RETCODE_MARKET_CLOSED', 'Рынок закрыт'),
-        10019: ('TRADE_RETCODE_NO_MONEY', 'Нет достаточных денежных средств для выполнения запроса'),
-        10020: ('TRADE_RETCODE_PRICE_CHANGED', 'Цены изменились'),
-        10021: ('TRADE_RETCODE_PRICE_OFF', 'Отсутствуют котировки для обработки запроса'),
-        10022: ('TRADE_RETCODE_INVALID_EXPIRATION', 'Неверная дата истечения ордера в запросе'),
-        10023: ('TRADE_RETCODE_ORDER_CHANGED', 'Состояние ордера изменилось'),
-        10024: ('TRADE_RETCODE_TOO_MANY_REQUESTS', 'Слишком частые запросы'),
-        10025: ('TRADE_RETCODE_NO_CHANGES', 'В запросе нет изменений'),
-        10026: ('TRADE_RETCODE_SERVER_DISABLES_AT', 'Автотрейдинг запрещен сервером'),
-        10027: ('TRADE_RETCODE_CLIENT_DISABLES_AT', 'Автотрейдинг запрещен клиентским терминалом'),
-        10028: ('TRADE_RETCODE_LOCKED', 'Запрос заблокирован для обработки'),
-        10029: ('TRADE_RETCODE_FROZEN', 'Ордер или позиция заморожены'),
-        10030: ('TRADE_RETCODE_INVALID_FILL', 'Указан неподдерживаемый тип исполнения ордера по остатку'),
-        10031: ('TRADE_RETCODE_CONNECTION', 'Нет соединения с торговым сервером'),
-        10032: ('TRADE_RETCODE_ONLY_REAL', 'Операция разрешена только для реальных счетов'),
-        10033: ('TRADE_RETCODE_LIMIT_ORDERS', 'Достигнут лимит на количество отложенных ордеров'),
+        -800: ('CUSTOM_RETCODE_NOT_ENOUGH_MARGIN', 'Уменьшите множитель или увеличьте сумму инвестиции'.encode('utf-8')),
+        -700: ('CUSTOM_RETCODE_LIMITS_NOT_CHANGED', 'Уровни не изменены'.encode('utf-8')),
+        -600: ('CUSTOM_RETCODE_POSITION_NOT_MODIFIED', 'Объем сделки не изменен'.encode('utf-8')),
+        -500: ('CUSTOM_RETCODE_POSITION_NOT_MODIFIED', 'Объем сделки не изменен'.encode('utf-8')),
+        -400: ('CUSTOM_RETCODE_POSITION_NOT_MODIFIED', 'Объем сделки не изменен'.encode('utf-8')),
+        -300: ('CUSTOM_RETCODE_EQUAL_VOLUME', 'Новый объем сделки равен существующему'.encode('utf-8')),
+        -200: ('CUSTOM_RETCODE_WRONG_SYMBOL', 'Нет такого торгового символа'.encode('utf-8')),
+        -100: ('CUSTOM_RETCODE_NOT_ENOUGH_MARGIN', 'Нехватка маржи. Выбран режим - Не открывать сделку или Не выбрано'.encode('utf-8')),
+        10004: ('TRADE_RETCODE_REQUOTE', 'Реквота'.encode('utf-8')),
+        10006: ('TRADE_RETCODE_REJECT', 'Запрос отклонен'.encode('utf-8')),
+        10007: ('TRADE_RETCODE_CANCEL', 'Запрос отменен трейдером'.encode('utf-8')),
+        10008: ('TRADE_RETCODE_PLACED', 'Ордер размещен'.encode('utf-8')),
+        10009: ('TRADE_RETCODE_DONE', 'Заявка выполнена'.encode('utf-8')),
+        10010: ('TRADE_RETCODE_DONE_PARTIAL', 'Заявка выполнена частично'.encode('utf-8')),
+        10011: ('TRADE_RETCODE_ERROR', 'Ошибка обработки запроса'.encode('utf-8')),
+        10012: ('TRADE_RETCODE_TIMEOUT', 'Запрос отменен по истечению времени'.encode('utf-8')),
+        10013: ('TRADE_RETCODE_INVALID', 'Неправильный запрос'.encode('utf-8')),
+        10014: ('TRADE_RETCODE_INVALID_VOLUME', 'Неправильный объем в запросе'.encode('utf-8')),
+        10015: ('TRADE_RETCODE_INVALID_PRICE', 'Неправильная цена в запросе'.encode('utf-8')),
+        10016: ('TRADE_RETCODE_INVALID_STOPS', 'Неправильные стопы в запросе'.encode('utf-8')),
+        10017: ('TRADE_RETCODE_TRADE_DISABLED', 'Торговля запрещена'.encode('utf-8')),
+        10018: ('TRADE_RETCODE_MARKET_CLOSED', 'Рынок закрыт'.encode('utf-8')),
+        10019: ('TRADE_RETCODE_NO_MONEY', 'Нет достаточных денежных средств для выполнения запроса'.encode('utf-8')),
+        10020: ('TRADE_RETCODE_PRICE_CHANGED', 'Цены изменились'.encode('utf-8')),
+        10021: ('TRADE_RETCODE_PRICE_OFF', 'Отсутствуют котировки для обработки запроса'.encode('utf-8')),
+        10022: ('TRADE_RETCODE_INVALID_EXPIRATION', 'Неверная дата истечения ордера в запросе'.encode('utf-8')),
+        10023: ('TRADE_RETCODE_ORDER_CHANGED', 'Состояние ордера изменилось'.encode('utf-8')),
+        10024: ('TRADE_RETCODE_TOO_MANY_REQUESTS', 'Слишком частые запросы'.encode('utf-8')),
+        10025: ('TRADE_RETCODE_NO_CHANGES', 'В запросе нет изменений'.encode('utf-8')),
+        10026: ('TRADE_RETCODE_SERVER_DISABLES_AT', 'Автотрейдинг запрещен сервером'.encode('utf-8')),
+        10027: ('TRADE_RETCODE_CLIENT_DISABLES_AT', 'Автотрейдинг запрещен клиентским терминалом'.encode('utf-8')),
+        10028: ('TRADE_RETCODE_LOCKED', 'Запрос заблокирован для обработки'.encode('utf-8')),
+        10029: ('TRADE_RETCODE_FROZEN', 'Ордер или позиция заморожены'.encode('utf-8')),
+        10030: ('TRADE_RETCODE_INVALID_FILL', 'Указан неподдерживаемый тип исполнения ордера по остатку'.encode('utf-8')),
+        10031: ('TRADE_RETCODE_CONNECTION', 'Нет соединения с торговым сервером'.encode('utf-8')),
+        10032: ('TRADE_RETCODE_ONLY_REAL', 'Операция разрешена только для реальных счетов'.encode('utf-8')),
+        10033: ('TRADE_RETCODE_LIMIT_ORDERS', 'Достигнут лимит на количество отложенных ордеров'.encode('utf-8')),
         10034: (
-            'TRADE_RETCODE_LIMIT_VOLUME', 'Достигнут лимит на объем ордеров и позиций для данного символа'),
-        10035: ('TRADE_RETCODE_INVALID_ORDER', 'Неверный или запрещённый тип ордера'),
-        10036: ('TRADE_RETCODE_POSITION_CLOSED', 'Позиция с указанным POSITION_IDENTIFIER уже закрыта'),
-        10038: ('TRADE_RETCODE_INVALID_CLOSE_VOLUME', 'Закрываемый объем превышает текущий объем позиции'),
-        10039: ('TRADE_RETCODE_CLOSE_ORDER_EXIST', 'Для указанной позиции уже есть ордер на закрытие'),
+            'TRADE_RETCODE_LIMIT_VOLUME', 'Достигнут лимит на объем ордеров и позиций для данного символа'.encode('utf-8')),
+        10035: ('TRADE_RETCODE_INVALID_ORDER', 'Неверный или запрещённый тип ордера'.encode('utf-8')),
+        10036: ('TRADE_RETCODE_POSITION_CLOSED', 'Позиция с указанным POSITION_IDENTIFIER уже закрыта'.encode('utf-8')),
+        10038: ('TRADE_RETCODE_INVALID_CLOSE_VOLUME', 'Закрываемый объем превышает текущий объем позиции'.encode('utf-8')),
+        10039: ('TRADE_RETCODE_CLOSE_ORDER_EXIST', 'Для указанной позиции уже есть ордер на закрытие'.encode('utf-8')),
         10040: ('TRADE_RETCODE_LIMIT_POSITIONS',
                 'Количество открытых позиций, которое можно одновременно иметь на счете, '
-                'может быть ограничено настройками сервера'),
+                'может быть ограничено настройками сервера'.encode('utf-8')),
         10041: (
             'TRADE_RETCODE_REJECT_CANCEL',
-            'Запрос на активацию отложенного ордера отклонен, а сам ордер отменен'),
+            'Запрос на активацию отложенного ордера отклонен, а сам ордер отменен'.encode('utf-8')),
         10042: (
             'TRADE_RETCODE_LONG_ONLY',
             'Запрос отклонен, так как на символе установлено правило "Разрешены только '
-            'длинные позиции"  (POSITION_TYPE_BUY)'),
+            'длинные позиции"  (POSITION_TYPE_BUY)'.encode('utf-8')),
         10043: ('TRADE_RETCODE_SHORT_ONLY',
                 'Запрос отклонен, так как на символе установлено правило "Разрешены только '
-                'короткие позиции" (POSITION_TYPE_SELL)'),
+                'короткие позиции" (POSITION_TYPE_SELL)'.encode('utf-8')),
         10044: ('TRADE_RETCODE_CLOSE_ONLY',
                 'Запрос отклонен, так как на символе установлено правило "Разрешено только '
-                'закрывать существующие позиции"'),
+                'закрывать существующие позиции"'.encode('utf-8')),
         10045: ('TRADE_RETCODE_FIFO_CLOSE',
                 'Запрос отклонен, так как для торгового счета установлено правило "Разрешено '
                 'закрывать существующие позиции только по правилу FIFO" ('
-                'ACCOUNT_FIFO_CLOSE=true)'),
+                'ACCOUNT_FIFO_CLOSE=true)'.encode('utf-8')),
         10046: (
             'TRADE_RETCODE_HEDGE_PROHIBITED',
             'Запрос отклонен, так как для торгового счета установлено правило '
-            '"Запрещено открывать встречные позиции по одному символу"')}
+            '"Запрещено открывать встречные позиции по одному символу"'.encode('utf-8'))}
 
     login: int
     password: str
@@ -124,10 +124,10 @@ class Terminal:
         try:
             valid = int(data['login']) and data['password'] and data['server'] and data['path']
             if not valid:
-                print('Неверные данные инициализации', data)
+                print('Неверные данные инициализации'.encode('utf-8'), data)
             return valid
         except Exception as e:
-            print('Неверные данные инициализации', e)
+            print('Неверные данные инициализации'.encode('utf-8'), e)
             return False
 
     @staticmethod
@@ -397,7 +397,8 @@ class Terminal:
             volume = round(floor(volume_none_round / lot_step) * lot_step, decimals)
 
         print(
-            f'Размер инвестиции: {investment}  Курс: {price}  Контракт: {contract}  Плечо: {leverage}  >>  ОБЪЕМ: {volume}')
+            f'Размер инвестиции: {investment}  Курс: {price}  Контракт: {contract}  Плечо: {leverage}  >>  '
+            f'ОБЪЕМ: {volume}'.encode('utf-8'))
         return volume
 
     # @staticmethod
@@ -410,7 +411,8 @@ class Terminal:
             info = Mt.symbol_info(request['symbol'])
             max_vol = info.volume_max
             if request['volume'] > max_vol:
-                print(options['login'], f'Объем сделки [{request["volume"]}] больше максимального [{max_vol}]. ')
+                print(options['login'], f'Объем сделки [{request["volume"]}] больше максимального [{max_vol}]. '
+                      .encode('utf-8'))
                 # await send_comment('Объем сделки больше максимального')
                 return 'MORE_THAN_MAX_VOLUME'
             if options['not_enough_margin'] == 'Минимальный объем':

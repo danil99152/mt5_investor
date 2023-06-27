@@ -81,7 +81,8 @@ async def check_stop_limits():
     total_profit = history_profit + current_profit
     print(f' - {init_data["login"]} [{db.leader_currency}] - {len(Terminal.get_positions())} positions. Access:',
           dcs_access, ' ', datetime.now(), end='')
-    print('\t', 'Прибыль' if total_profit >= 0 else 'Убыток', 'торговли c', start_date,
+    print('\t', 'Прибыль'.encode('utf-8') if total_profit >= 0
+    else 'Убыток'.encode('utf-8'), 'торговли c'.encode('utf-8'), start_date,
           ':', round(total_profit, 2), db.leader_currency,
           '{curr.', round(current_profit, 2), ': hst. ' + str(round(history_profit, 2)) + '}')
     # CHECK LOST SIZE FOR CLOSE ALL
@@ -179,7 +180,7 @@ def check_transaction(leader_position):
         curr_time = int(datetime.timestamp(datetime.utcnow().replace(microsecond=0)))
         delta_time = curr_time - deal_time
         if delta_time > timeout:  # если время больше заданного
-            print('Время истекло')
+            print('Время истекло'.encode('utf-8'))
             return False
 
     transaction_type = 0
@@ -379,7 +380,7 @@ if __name__ == '__main__':
                         start_date=datetime.now(),
                         portable=True)
     if not terminal.init_mt():
-        print('Ошибка инициализации инвестора', init_data)
+        print('Ошибка инициализации инвестора'.encode('utf-8'), init_data)
         exit()
     leader_account_ids = db.get_leader_ids(host, exchange_id)
     for leader_account_id in leader_account_ids:

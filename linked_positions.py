@@ -67,7 +67,7 @@ class LinkedPositions:
 
     def modify_volume(self, new_volume):
         """Change summary volume of linked positions"""
-        print('  Текущий объем:', self.volume, ' Новый:', new_volume)
+        print('  Текущий объем:'.encode('utf-8'), self.volume, ' Новый:'.encode('utf-8'), new_volume)
         decimals = Terminal.get_volume_decimals(self.symbol)
         new_comment = DealComment()
         new_comment.lieder_ticket = self.lieder_ticket
@@ -95,7 +95,8 @@ class LinkedPositions:
             target_volume = round(self.volume - new_volume, decimals)
             for pos in reversed(self.positions):
                 if pos.volume <= target_volume:  # Если объем позиции меньше либо равен целевому, то закрыть позицию
-                    print('\t Уменьшение объема. Закрытие позиции', pos.ticket, ' объем:', pos.volume)
+                    print('\t Уменьшение объема. Закрытие позиции'.encode('utf-8'), pos.ticket,
+                          ' объем:'.encode('utf-8'), pos.volume)
                     request = {
                         'action': Terminal.trade_action_deal(),
                         'position': pos.ticket,
@@ -137,5 +138,5 @@ class LinkedPositions:
                         result = Terminal.send_order(request)
                         print('\t', Terminal.send_retcodes[result.retcode], ':', result.retcode)
                     else:
-                        print('\t Частичное закрытие объема = 0.0')
+                        print('\t Частичное закрытие объема = 0.0'.encode('utf-8'))
                     break
