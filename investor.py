@@ -144,7 +144,7 @@ def synchronize_positions_limits(lieder_positions):
                     comment = DealComment().set_from_string(i_pos.comment)
                     comment.reason = '09'
                     new_comment_str = comment.string()
-                if comment.lieder_ticket == l_pos['ticket']:
+                if comment.lieder_ticket == int(l_pos['ticket']):
                     i_tp = Terminal.get_pos_pips_tp(i_pos)
                     i_sl = Terminal.get_pos_pips_sl(i_pos)
                     sl_lvl = tp_lvl = 0.0
@@ -274,11 +274,11 @@ def get_currency_coefficient():
     return currency_coefficient
 
 
-async def execute_investor(leader_id, sleep=settings.sleep_leader_update):
+async def execute_investor(leader_id, leaders, sleep=settings.sleep_leader_update):
     global leader_positions, db, max_balance
     while True:
         await db.update_data(leader_id)
-        leader_positions = await db.get_db_positions(leader_id)
+        leader_positions = await db.get_db_positions(leaders)
         balance = Terminal.get_account_balance()
         if balance > max_balance:
             max_balance = balance
@@ -323,7 +323,7 @@ async def execute_investor(leader_id, sleep=settings.sleep_leader_update):
                     volume = round(volume / get_currency_coefficient(), decimals)
                     response = await terminal.open_position(options_data=db.options, symbol=pos_lid['symbol'],
                                                             deal_type=pos_lid['type'],
-                                                            lot=volume, sender_ticket=pos_lid['ticket'],
+                                                            lot=volume, sender_ticket=int(pos_lid['ticket']),
                                                             tp=inv_tp, sl=inv_sl)
                     if response:
                         try:
@@ -346,8 +346,8 @@ async def execute_investor(leader_id, sleep=settings.sleep_leader_update):
             for _ in closed_positions:
                 await db.send_history_position(_.ticket, max_balance)
 
-        active_db_positions = await db.get_db_positions(exchange_id)
-        active_db_tickets = [position['ticket'] for position in active_db_positions]
+        active_db_positions = await db.get_db_positions([exchange_id])
+        active_db_tickets = [int(position['ticket']) for position in active_db_positions]
         terminal_positions = Terminal.get_positions()
         terminal_tickets = [position.ticket for position in terminal_positions]
 
@@ -358,15 +358,15 @@ async def execute_investor(leader_id, sleep=settings.sleep_leader_update):
                 await db.update_position(position)
 
         for position in active_db_positions:
-            if position['ticket'] not in terminal_tickets:
-                await db.disable_position(position['ticket'])
+            if int(position['ticket']) not in terminal_tickets:
+                await db.disable_position(int(position['ticket']))
 
         await asyncio.sleep(sleep)
 
 
-def callback(leader_id):
+def callback(leader_id, leader_account_ids):
     event_loop = asyncio.new_event_loop()
-    event_loop.create_task(execute_investor(leader_id=leader_id))
+    event_loop.create_task(execute_investor(leader_id=leader_id, leaders=leader_account_ids))
     event_loop.run_forever()
 
 
@@ -391,4 +391,4 @@ if __name__ == '__main__':
                       leader_currency=Terminal.get_account_currency())
 
         db.send_currency()
-        threading.Thread(target=callback, args=(leader_account_id,)).start()
+        threading.Thread(target=callback, args=(leader_account_id, leader_account_ids,)).start()

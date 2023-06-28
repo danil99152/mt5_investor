@@ -191,22 +191,25 @@ class DBInterface:
             # return requests.get(url=url).json()[-1]
         except Exception as e:
             print(e)
-            return self.get_investor_options()
+            return self.get_investor_options(leader_id)
 
     async def disable_dcs(self):
         url = self.host + f'exchange/patch/{self.exchange_id}/'
         data = {'access': False}
         await patch(url=url, data=json.dumps(data))
 
-    async def get_db_positions(self, id_):
+    async def get_db_positions(self, ids: list):
         try:
-            url = self.host + f'position/list/active/{id_}'
-            result = await get(url=url)
-            # print(id_, url, result)
+            result = []
+            for id_ in ids:
+                url = self.host + f'position/list/active/{id_}'
+                response = await get(url=url)
+                result.extend(response)
+                # print(id_, url, result)
             return result
         except Exception as e:
             print(e)
-            return self.get_db_positions(id_)
+            return self.get_db_positions(ids)
 
     async def get_account_data(self):
         try:

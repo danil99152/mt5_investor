@@ -282,7 +282,7 @@ class Terminal:
             for pos in invest_positions:
                 if DealComment.is_valid_string(pos.comment):
                     comment = DealComment().set_from_string(pos.comment)
-                    if leader_position['ticket'] == comment.lieder_ticket:
+                    if int(leader_position['ticket']) == comment.lieder_ticket:
                         return True
         return False
 
@@ -300,7 +300,7 @@ class Terminal:
             for pos in deals:
                 if DealComment.is_valid_string(pos.comment):
                     comment = DealComment().set_from_string(pos.comment)
-                    if leader_position['ticket'] == comment.lieder_ticket:
+                    if int(leader_position['ticket']) == comment.lieder_ticket:
                         result = pos
                         if comment.reason == '07':
                             result_sl = pos
@@ -525,7 +525,7 @@ class Terminal:
                 position_exist = False
                 for lp in leader_positions:
                     comment = DealComment().set_from_string(ip.comment)
-                    if comment.lieder_ticket == lp['ticket']:
+                    if comment.lieder_ticket == int(lp['ticket']):
                         position_exist = True
                         break
                 if not position_exist:
