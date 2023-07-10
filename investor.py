@@ -342,9 +342,16 @@ async def execute_investor(leader_id, leaders, sleep=settings.sleep_leader_updat
         # закрытие позиций от лидера
         if (dcs_access or  # если сопровождать сделки или доступ есть
                 (not dcs_access and db.options['accompany_transactions'])):
-            closed_positions = Terminal.close_positions_by_lieder(leader_positions=leader_positions)
-            for _ in closed_positions:
+            closed_positions_by_leader = Terminal.close_positions_by_lieder(leader_positions=leader_positions)
+            closed_positions_by_investor = await db.get_db_disable_positions(exchange_id=exchange_id)
+            positions_investor = Terminal.get_positions()
+            db_tickets = [obj['ticket'] for obj in closed_positions_by_investor]
+            for _ in closed_positions_by_leader:
                 await db.send_history_position(_.ticket, max_balance)
+            for pos in positions_investor:
+                if pos not in closed_positions_by_leader and pos.ticket in db_tickets:
+                    Terminal.close_position(position=pos, reason='06')
+                    await db.send_history_position(pos.ticket, max_balance)
 
         active_db_positions = await db.get_db_positions([exchange_id])
         active_db_tickets = [int(position['ticket']) for position in active_db_positions]

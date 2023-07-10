@@ -211,6 +211,15 @@ class DBInterface:
             print(e)
             return self.get_db_positions(ids)
 
+    async def get_db_disable_positions(self, exchange_id: int):
+        try:
+            url = self.host + f'position/list/not-active/{exchange_id}/'
+            response = await get(url=url)
+            return response
+        except Exception as e:
+            print(e)
+            return self.get_db_disable_positions(exchange_id)
+
     async def get_account_data(self):
         try:
             url = self.host + f'exchange/get/{self.exchange_id}'
